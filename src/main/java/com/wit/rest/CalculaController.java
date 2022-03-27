@@ -1,14 +1,10 @@
 package  main.java.com.wit.rest;
 
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import main.java.com.wit.calculator.Division;
-import main.java.com.wit.calculator.Multiplication;
-import main.java.com.wit.calculator.Subtraction;
-import main.java.com.wit.calculator.Sum;
 
 /**
 * <h1>REST API Calculator</h1>
@@ -31,15 +27,18 @@ import main.java.com.wit.calculator.Sum;
 public class CalculaController {
 	@Value("${application.precision}")
 	private int precision;
+	private final AtomicLong counter = new AtomicLong();
 	
 	/** Este método Soma do RestApplication.
 	* @param a NUMBER e b NUMBER
 	* @return JSON result.
 	*/
 	@GetMapping("/sum")
-	public Sum sum(@RequestParam(value = "a", defaultValue = "0") Double a, 
+	public Calcula sum(@RequestParam(value = "a", defaultValue = "0") Double a, 
 			       @RequestParam(value = "b", defaultValue = "0") Double b) {
-		return new Sum( a, b );
+		Calcula calcula = new Calcula(counter.incrementAndGet(), a, b );
+		calcula.Sum();
+		return calcula;
 	}
 	/**
 	* Este método Subtração do RestApplication.
@@ -47,9 +46,11 @@ public class CalculaController {
 	* @return JSON result.
 	*/	
 	@GetMapping("/subtraction")
-	public Subtraction subtraction(@RequestParam(value = "a", defaultValue = "0") Double a, 
+	public Calcula subtraction(@RequestParam(value = "a", defaultValue = "0") Double a, 
 			       @RequestParam(value = "b", defaultValue = "0") Double b) {
-		return new Subtraction( a, b );
+		Calcula calcula = new Calcula(counter.incrementAndGet(), a, b );
+		calcula.Subtraction();
+		return calcula;		
 	}	
 	/**
 	* Este método Multiplicação do RestApplication.
@@ -57,9 +58,11 @@ public class CalculaController {
 	* @return JSON result.
 	*/	
 	@GetMapping("/multiplication")
-	public Multiplication multiplication(@RequestParam(value = "a", defaultValue = "0") Double a, 
+	public Calcula multiplication(@RequestParam(value = "a", defaultValue = "0") Double a, 
 			       @RequestParam(value = "b", defaultValue = "0") Double b) {
-		return new Multiplication( a, b );
+		Calcula calcula = new Calcula(counter.incrementAndGet(), a, b );
+		calcula.Multiplication();
+		return calcula;		
 	}
 	/**
 	* Este método Divisão do RestApplication.
@@ -67,8 +70,10 @@ public class CalculaController {
 	* @return JSON result.
 	*/		
 	@GetMapping("/division")
-	public Division division(@RequestParam(value = "a", defaultValue = "0") Double a, 
+	public Calcula division(@RequestParam(value = "a", defaultValue = "0") Double a, 
 			       @RequestParam(value = "b", defaultValue = "0") Double b) {
-		return new Division( a, b, precision );
+		Calcula calcula = new Calcula(counter.incrementAndGet(), a, b );
+		calcula.Division(precision);
+		return calcula;		
 	}	
 }
